@@ -9,7 +9,7 @@ package Empresa.modelos;
  * @author martine.llaviv
  */
 public class Producto {
-   private String codigo;
+    private String codigo;
     private String nombre;
     private double precio;
     private String categoria;
@@ -52,7 +52,4 @@ public class Producto {
     public void setCategoria(String categoria) {
         this.categoria = categoria;
     }
-    
-
-     
 }

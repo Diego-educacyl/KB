@@ -24,10 +24,10 @@ public class ProductoDAO {
 
             while (rs.next()) {
                 Producto p = new Producto(
-                        rs.getInt("codigo"),
-                        rs.getString("nombre"),
-                        rs.getDouble("precio"),
-                        rs.getInt("stock")
+                    rs.getString("codigo"),
+                    rs.getString("nombre"),
+                    rs.getDouble("precio"),
+                    rs.getString("categoria")
                 );
                 productos.add(p);
             }
@@ -45,9 +45,10 @@ public class ProductoDAO {
         try (Connection conn = Database.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setString(1, p.getNombre());
-            stmt.setDouble(2, p.getPrecio());
-            stmt.setInt(categoria, p.getCategoria());
+            stmt.setString(1, p.getCodigo());
+            stmt.setString(2, p.getNombre());
+            stmt.setDouble(3, p.getPrecio());
+            stmt.setString(4, p.getCategoria());
 
             stmt.executeUpdate();
         } catch (SQLException e) {
@@ -56,15 +57,15 @@ public class ProductoDAO {
     }
 
     public static void actualizar(Producto p) {
-        String sql = "UPDATE productos SET nombre = ?, precio = ?, stock = ? WHERE id = ?";
+        String sql = "UPDATE productos SET nombre = ?, precio = ?, categoria = ? WHERE codigo = ?";
 
         try (Connection conn = Database.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, p.getNombre());
             stmt.setDouble(2, p.getPrecio());
-            stmt.setInt(3, p.getCategoria());
-            stmt.setInt(4, p.getCodigo());
+            stmt.setString(3, p.getCategoria());
+            stmt.setString(4, p.getCodigo());
 
             stmt.executeUpdate();
         } catch (SQLException e) {
@@ -72,13 +73,13 @@ public class ProductoDAO {
         }
     }
 
-    public static void eliminar(int id) {
-        String sql = "DELETE FROM productos WHERE id = ?";
+    public static void eliminar(String codigo) {
+        String sql = "DELETE FROM productos WHERE codigo = ?";
 
         try (Connection conn = Database.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setInt(1, id);
+            stmt.setString(1, codigo);
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

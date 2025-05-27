@@ -9,21 +9,30 @@ package Empresa.modelos;
  * @author martine.llaviv
  */
 public class Cliente {
-      private int id;
+    
+    private int id;
     private String nombre;
     private String correo;
+    private String telefono;
 
-    // Constructor para nuevos clientes (sin ID)
-    public Cliente(String nombre, String correo) {
-        this.nombre = nombre;
-        this.correo = correo;
-    }
-
-    // Constructor para clientes existentes (con ID)
-    public Cliente(int id, String nombre, String correo) {
+    public Cliente(String nombre, String telefono, String correo) {
+    this.nombre = nombre;
+    this.telefono = telefono;
+    this.correo = correo;
+}
+    public Cliente(int id, String nombre, String telefono, String correo) {
         this.id = id;
         this.nombre = nombre;
         this.correo = correo;
+        this.telefono = telefono;
+    }
+
+    public String getTelefono() {
+        return telefono;
+    }
+
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
     }
 
     public int getId() {

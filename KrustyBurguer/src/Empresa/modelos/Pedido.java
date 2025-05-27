@@ -4,9 +4,6 @@
  */
 package Empresa.modelos;
 
-import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.List;
 
 /**
  *
@@ -14,19 +11,49 @@ import java.util.List;
  */
 public class Pedido {
     private int id;
-    private int idCliente;
+    private int clienteId;
     private String fecha;
+    private String estado;
     private double total;
 
     public Pedido() {
     }
 
-    public Pedido(int id, int idCliente, String fecha, double total) {
+    
+    public Pedido(int id, int clienteId, String fecha, String estado, double total) {
         this.id = id;
-        this.idCliente = idCliente;
+        this.clienteId = clienteId;
         this.fecha = fecha;
+        this.estado = estado;
         this.total = total;
     }
+
+    public Pedido(int id, String fecha, String estado, double total) {
+        this.id = id;
+        this.fecha = fecha;
+        this.estado = estado;
+        this.total = total;
+    }
+    
+    
+
+    public int getClienteId() {
+        return clienteId;
+    }
+
+    public void setClienteId(int clienteId) {
+        this.clienteId = clienteId;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
+
+ 
 
     // Getters y setters
     public int getId() {
@@ -38,11 +65,11 @@ public class Pedido {
     }
 
     public int getIdCliente() {
-        return idCliente;
+        return clienteId;
     }
 
     public void setIdCliente(int idCliente) {
-        this.idCliente = idCliente;
+        this.clienteId = idCliente;
     }
 
     public String getFecha() {

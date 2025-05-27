@@ -10,30 +10,51 @@ package Empresa.modelos;
  */
 public class DetallePedido {
     private int id;
-    private int idPedido;
-    private int idProducto;
+    private int pedidoId;
+    private Producto producto;
     private int cantidad;
-    private double precioUnitario;  // Nuevo campo agregado
+    private double precioUnitario;
 
-    public DetallePedido() {}
-
-    public DetallePedido(int id, int idPedido, int idProducto, int cantidad, double precioUnitario) {
+    public DetallePedido(int id, int idPedido, Producto producto, int cantidad, double precioUnitario) {
         this.id = id;
-        this.idPedido = idPedido;
-        this.idProducto = idProducto;
+        this.pedidoId = idPedido;
+        this.producto = producto;
         this.cantidad = cantidad;
         this.precioUnitario = precioUnitario;
     }
 
-    // Getters y Setters
+    public DetallePedido(Producto producto) {
+        this.producto = producto;
+        this.cantidad = 1;
+        this.precioUnitario = producto.getPrecio();
+    }
+
+    public void incrementarCantidad() {
+        cantidad++;
+    }
+
+    public double getSubtotal() {
+        return cantidad * precioUnitario;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%-20s %2dx %.2f€ = %.2f€",
+                producto.getNombre(), cantidad, precioUnitario, getSubtotal());
+    }
+
+    // Getters y setters
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 
-    public int getIdPedido() { return idPedido; }
-    public void setIdPedido(int idPedido) { this.idPedido = idPedido; }
+    public int getIdPedido() { return pedidoId; }
+    public void setIdPedido(int idPedido) { this.pedidoId = idPedido; }
 
-    public int getIdProducto() { return idProducto; }
-    public void setIdProducto(int idProducto) { this.idProducto = idProducto; }
+    public Producto getProducto() { return producto; }
+    public void setProducto(Producto producto) {
+        this.producto = producto;
+        this.precioUnitario = producto.getPrecio();
+    }
 
     public int getCantidad() { return cantidad; }
     public void setCantidad(int cantidad) { this.cantidad = cantidad; }

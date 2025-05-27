@@ -5,7 +5,7 @@
 package Empresa.vistas;
 
 import Empresa.controladores.ControladorPOS;
-import Empresa.modelos.LineaPedido;
+import Empresa.modelos.DetallePedido;
 import Empresa.modelos.Producto;
 import Empresa.vistas.MenuPOS;
 import javax.swing.*;
@@ -19,7 +19,7 @@ import java.util.ArrayList;
  */
 public class MenuPOS extends javax.swing.JFrame {
 
-      private JPanel panelCentro;
+    private JPanel panelCentro;
     private JTextArea areaPedido;
     private JLabel labelTotal;
     private boolean esAdmin;
@@ -131,7 +131,7 @@ public class MenuPOS extends javax.swing.JFrame {
         String[] opciones = {"Clásica", "Cheddar", "BBQ", "Doble"};
         for (String item : opciones) {
             JButton btn = new JButton(item);
-            btn.addActionListener(e -> controladorPOS.agregarProducto(new Producto("H" + item, item, 5.0, "Hamburguesa")));
+            btn.addActionListener(e -> controladorPOS.agregarProducto(new Producto("H" + item, item, 5.0, "Hamburguesa", rs.getInt("cantidad"))));
             panel.add(btn);
         }
         return panel;
@@ -142,7 +142,7 @@ public class MenuPOS extends javax.swing.JFrame {
         String[] opciones = {"Patatas", "Ensalada", "Aros de Cebolla", "Nachos"};
         for (String item : opciones) {
             JButton btn = new JButton(item);
-            btn.addActionListener(e -> controladorPOS.agregarProducto(new Producto("A" + item, item, 2.5, "Acompañamiento")));
+            btn.addActionListener(e -> controladorPOS.agregarProducto(new Producto("A" + item, item, 2.5, "Acompañamiento", rs.getInt("cantidad"))));
             panel.add(btn);
         }
         return panel;
@@ -153,7 +153,7 @@ public class MenuPOS extends javax.swing.JFrame {
         String[] opciones = {"Coca-Cola", "Fanta", "Agua", "Cerveza"};
         for (String item : opciones) {
             JButton btn = new JButton(item);
-            btn.addActionListener(e -> controladorPOS.agregarProducto(new Producto("B" + item, item, 1.8, "Bebida")));
+            btn.addActionListener(e -> controladorPOS.agregarProducto(new Producto("B" + item, item, 1.8, "Bebida", rs.getInt("cantidad"))));
             panel.add(btn);
         }
         return panel;
@@ -168,11 +168,11 @@ public class MenuPOS extends javax.swing.JFrame {
         JButton btnEliminarTicket = new JButton("Eliminar Ticket");
 
         btnResumenVentas.addActionListener(e -> areaPedido.setText(
-            "🔍 Resumen de ventas por producto:\n\n- Hamburguesa Clásica: 20 uds\n- Bebida: 35 uds\n\nTotal: 550€"
+                "🔍 Resumen de ventas por producto:\n\n- Hamburguesa Clásica: 20 uds\n- Bebida: 35 uds\n\nTotal: 550€"
         ));
 
         btnInformeInventario.addActionListener(e -> areaPedido.setText(
-            "📦 Informe de inventario:\n\n- Hamburguesa Clásica: 80 uds\n- Patatas: 120 uds\n- Coca-Cola: 60 uds"
+                "📦 Informe de inventario:\n\n- Hamburguesa Clásica: 80 uds\n- Patatas: 120 uds\n- Coca-Cola: 60 uds"
         ));
 
         btnModificarInventario.addActionListener(e -> {
@@ -199,6 +199,10 @@ public class MenuPOS extends javax.swing.JFrame {
         controladorPOS.limpiarPedido();
     }
 
+    private void modificarInventario() {
+        new ModificarInventarioDialog(this, true);
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -213,12 +217,12 @@ public class MenuPOS extends javax.swing.JFrame {
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 400, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(0, 300, Short.MAX_VALUE)
         );
 
         pack();

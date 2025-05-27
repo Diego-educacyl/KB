@@ -5,7 +5,7 @@
 package Empresa.controladores;
 
 import Empresa.modelos.Producto;
-import Empresa.modelos.LineaPedido;
+import Empresa.modelos.DetallePedido;
 import javax.swing.*;
 import java.util.*;
 /**
@@ -13,7 +13,7 @@ import java.util.*;
  * @author diego.cruang
  */
 public class ControladorPOS {
-    private List<LineaPedido> pedidoActual;
+    private List<DetallePedido> pedidoActual;
     
     private JTextArea areaPedido;
     private JLabel labelTotal;
@@ -25,14 +25,14 @@ public class ControladorPOS {
     }
 
     public void agregarProducto(Producto producto) {
-        for (LineaPedido linea : pedidoActual) {
+        for (DetallePedido linea : pedidoActual) {
             if (linea.getProducto().getCodigo().equals(producto.getCodigo())) {
                 linea.incrementarCantidad();
                 actualizarVista();
                 return;
             }
         }
-        pedidoActual.add(new LineaPedido(producto));
+        pedidoActual.add(new DetallePedido(producto));
         actualizarVista();
     }
 
@@ -44,7 +44,7 @@ public class ControladorPOS {
     private void actualizarVista() {
         StringBuilder sb = new StringBuilder();
         double total = 0.0;
-        for (LineaPedido linea : pedidoActual) {
+        for (DetallePedido linea : pedidoActual) {
             sb.append(linea.toString()).append("\n");
             total += linea.getSubtotal();
         }

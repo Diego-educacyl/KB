@@ -22,13 +22,12 @@ import javax.swing.table.DefaultTableModel;
  * @author martine.llaviv
  */
 public class ClientesFrame extends javax.swing.JFrame {
+
     private JTable tablaClientes;
     private DefaultTableModel modelo;
-    /**
-     * Creates new form ClientesFrame
-     */
+
     public ClientesFrame() {
-       setTitle("Gestión de Clientes");
+        setTitle("Gestión de Clientes");
         setSize(600, 400);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -58,38 +57,44 @@ public class ClientesFrame extends javax.swing.JFrame {
     }
 
     private void cargarClientes() {
-        modelo.setRowCount(0);
-        List<Cliente> clientes = ClienteDAO.obtenerTodos();
-        for (Cliente c : clientes) {
-            modelo.addRow(new Object[]{c.getId(), c.getNombre(), c.getCorreo()});
-        }
+    modelo.setRowCount(0);
+    List<Cliente> clientes = ClienteDAO.obtenerTodos();
+    for (Cliente c : clientes) {
+        modelo.addRow(new Object[]{c.getId(), c.getNombre(), c.getCorreo(), c.getTelefono()}); // Agrega c.getTelefono()
     }
+}
 
     private void agregarCliente() {
-        String nombre = JOptionPane.showInputDialog(this, "Nombre:");
-        String correo = JOptionPane.showInputDialog(this, "Correo:");
-        if (nombre != null && correo != null) {
-            Cliente nuevo = new Cliente(nombre, correo);
-            ClienteDAO.insertar(nuevo);
+    String nombre = JOptionPane.showInputDialog(this, "Nombre:");
+    String telefono = JOptionPane.showInputDialog(this, "Teléfono:"); // Agrega esta línea
+    String correo = JOptionPane.showInputDialog(this, "Correo:");
+
+    if (nombre != null && telefono != null && correo != null &&
+        !nombre.trim().isEmpty() && !telefono.trim().isEmpty() && !correo.trim().isEmpty()) {
+        Cliente nuevo = new Cliente(nombre.trim(), telefono.trim(), correo.trim()); // Usa el nuevo constructor o ajusta según tu constructor actual
+        ClienteDAO.insertar(nuevo);
+        cargarClientes();
+    } else {
+        JOptionPane.showMessageDialog(this, "Nombre, teléfono y correo no pueden estar vacíos.");
+    }
+}
+
+   private void editarCliente() {
+    int fila = tablaClientes.getSelectedRow();
+    if (fila >= 0) {
+        int id = (int) modelo.getValueAt(fila, 0);
+        String nombre = JOptionPane.showInputDialog(this, "Nuevo nombre:", modelo.getValueAt(fila, 1));
+        String correo = JOptionPane.showInputDialog(this, "Nuevo correo:", modelo.getValueAt(fila, 2));
+        String telefono = JOptionPane.showInputDialog(this, "Nuevo teléfono:", modelo.getValueAt(fila, 3)); // Obtener el teléfono actual y pedir el nuevo
+        if (nombre != null && correo != null && telefono != null) {
+            Cliente actualizado = new Cliente(id, nombre, telefono, correo); // El orden aquí es id, nombre, telefono, correo
+            ClienteDAO.actualizar(actualizado);
             cargarClientes();
         }
+    } else {
+        JOptionPane.showMessageDialog(this, "Selecciona un cliente para editar.");
     }
-
-    private void editarCliente() {
-        int fila = tablaClientes.getSelectedRow();
-        if (fila >= 0) {
-            int id = (int) modelo.getValueAt(fila, 0);
-            String nombre = JOptionPane.showInputDialog(this, "Nuevo nombre:", modelo.getValueAt(fila, 1));
-            String correo = JOptionPane.showInputDialog(this, "Nuevo correo:", modelo.getValueAt(fila, 2));
-            if (nombre != null && correo != null) {
-                Cliente actualizado = new Cliente(id, nombre, correo);
-                ClienteDAO.actualizar(actualizado);
-                cargarClientes();
-            }
-        } else {
-            JOptionPane.showMessageDialog(this, "Selecciona un cliente para editar.");
-        }
-    }
+}
 
     private void eliminarCliente() {
         int fila = tablaClientes.getSelectedRow();
