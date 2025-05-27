@@ -19,11 +19,17 @@ import java.util.ArrayList;
  */
 public class MenuPOS extends javax.swing.JFrame {
 
-    private JPanel panelCentro;
+   
+      private JPanel panelCentro;
     private JTextArea areaPedido;
     private JLabel labelTotal;
     private boolean esAdmin;
     private ControladorPOS controladorPOS;
+    
+     // [MODIFICACIÓN INICIO] - Declaración de nuevos botones como variables de instancia
+    // Esto permite un acceso más fácil a ellos para configurar propiedades o listeners.
+    private JButton btnGestionarClientes;
+    // [MODIFICACIÓN FIN]
 
     public MenuPOS(boolean esAdmin) {
         this.esAdmin = esAdmin;
@@ -53,15 +59,26 @@ public class MenuPOS extends javax.swing.JFrame {
         JButton btnCambiarUsuario = new JButton("Cambiar Usuario");
         JButton btnAdmin = new JButton("Administración");
 
+        // [MODIFICACIÓN INICIO] - Inicialización de los nuevos botones
+        btnGestionarClientes = new JButton("Gestionar Clientes");
+        // [MODIFICACIÓN FIN]
+        
         botones.add(btnHamburguesas);
         botones.add(btnAcompanamientos);
         botones.add(btnBebidas);
+        botones.add(btnGestionarClientes); // [MODIFICACIÓN] - Añadido el botón de Clientes (siempre visible)
         botones.add(btnCambiarUsuario);
 
+        // [MODIFICACIÓN INICIO] - Lógica condicional para añadir el botón de Administración
+        // El botón "Administración" solo se añade a la lista si el usuario es administrador.
+        // Esto controla el acceso a toda la sección de administración, incluyendo la gestión de empleados.
         if (esAdmin) {
             botones.add(btnAdmin);
         }
-
+        // [MODIFICACIÓN FIN]
+        
+        
+//
         // Panel Central con CardLayout
         panelCentro = new JPanel(new CardLayout());
 
@@ -103,16 +120,32 @@ public class MenuPOS extends javax.swing.JFrame {
             panelIzquierda.add(btn, gbc);
         }
 
+         // [MODIFICACIÓN INICIO] - ActionListeners para los botones del panel lateral
         // Eventos de botones
         btnHamburguesas.addActionListener(e -> mostrarCategoria("hamburguesas"));
         btnAcompanamientos.addActionListener(e -> mostrarCategoria("acompanamientos"));
         btnBebidas.addActionListener(e -> mostrarCategoria("bebidas"));
-        btnCambiarUsuario.addActionListener(e -> {
-            dispose();
-            new PantallaLoginPOS();
+        
+        
+        // ActionListener para el botón "Gestionar Clientes"
+        btnGestionarClientes.addActionListener(e -> {
+            ClientesFrame clientesFrame = new ClientesFrame();
+            clientesFrame.setVisible(true);
+            // Opcional: Si quieres que el MenuPOS se cierre al abrir ClientesFrame, descomenta la siguiente línea:
+            // dispose(); 
         });
-        btnAdmin.addActionListener(e -> mostrarCategoria("admin"));
+        
+        btnCambiarUsuario.addActionListener(e -> {
+            dispose(); // Cierra el MenuPOS
+            new PantallaLoginPOS(); // Abre la pantalla de login
+        });
 
+        // ActionListener para el botón "Administración"
+        btnAdmin.addActionListener(e -> mostrarCategoria("admin"));
+        // El ActionListener para "Gestionar Empleados" se encuentra ahora dentro de crearPanelAdministracion()
+        // [MODIFICACIÓN FIN]
+
+        
         // Añadir a ventana principal
         add(panelIzquierda, BorderLayout.WEST);
         add(panelCentro, BorderLayout.CENTER);
@@ -131,7 +164,7 @@ public class MenuPOS extends javax.swing.JFrame {
         String[] opciones = {"Clásica", "Cheddar", "BBQ", "Doble"};
         for (String item : opciones) {
             JButton btn = new JButton(item);
-            btn.addActionListener(e -> controladorPOS.agregarProducto(new Producto("H" + item, item, 5.0, "Hamburguesa", rs.getInt("cantidad"))));
+            btn.addActionListener(e -> controladorPOS.agregarProducto(new Producto("H" + item, item, 5.0, "Hamburguesa")));
             panel.add(btn);
         }
         return panel;
@@ -142,7 +175,7 @@ public class MenuPOS extends javax.swing.JFrame {
         String[] opciones = {"Patatas", "Ensalada", "Aros de Cebolla", "Nachos"};
         for (String item : opciones) {
             JButton btn = new JButton(item);
-            btn.addActionListener(e -> controladorPOS.agregarProducto(new Producto("A" + item, item, 2.5, "Acompañamiento", rs.getInt("cantidad"))));
+            btn.addActionListener(e -> controladorPOS.agregarProducto(new Producto("A" + item, item, 2.5, "Acompañamiento")));
             panel.add(btn);
         }
         return panel;
@@ -153,7 +186,7 @@ public class MenuPOS extends javax.swing.JFrame {
         String[] opciones = {"Coca-Cola", "Fanta", "Agua", "Cerveza"};
         for (String item : opciones) {
             JButton btn = new JButton(item);
-            btn.addActionListener(e -> controladorPOS.agregarProducto(new Producto("B" + item, item, 1.8, "Bebida", rs.getInt("cantidad"))));
+            btn.addActionListener(e -> controladorPOS.agregarProducto(new Producto("B" + item, item, 1.8, "Bebida")));
             panel.add(btn);
         }
         return panel;
@@ -166,13 +199,17 @@ public class MenuPOS extends javax.swing.JFrame {
         JButton btnInformeInventario = new JButton("Informe de Inventario");
         JButton btnModificarInventario = new JButton("Modificar Inventario");
         JButton btnEliminarTicket = new JButton("Eliminar Ticket");
+        // [MODIFICACIÓN INICIO] - Se declara e inicializa el botón de Gestionar Empleados aquí.
+        // Este botón es LOCAL a este método y solo se añadirá a este panel.
+        JButton btnGestionarEmpleadosInterno = new JButton("Gestionar Empleados"); 
+        //[MODIFICACION FIN]
 
         btnResumenVentas.addActionListener(e -> areaPedido.setText(
-                "🔍 Resumen de ventas por producto:\n\n- Hamburguesa Clásica: 20 uds\n- Bebida: 35 uds\n\nTotal: 550€"
+            "🔍 Resumen de ventas por producto:\n\n- Hamburguesa Clásica: 20 uds\n- Bebida: 35 uds\n\nTotal: 550€"
         ));
 
         btnInformeInventario.addActionListener(e -> areaPedido.setText(
-                "📦 Informe de inventario:\n\n- Hamburguesa Clásica: 80 uds\n- Patatas: 120 uds\n- Coca-Cola: 60 uds"
+            "📦 Informe de inventario:\n\n- Hamburguesa Clásica: 80 uds\n- Patatas: 120 uds\n- Coca-Cola: 60 uds"
         ));
 
         btnModificarInventario.addActionListener(e -> {
@@ -185,11 +222,23 @@ public class MenuPOS extends javax.swing.JFrame {
             String ticketId = JOptionPane.showInputDialog(this, "Ingrese el número de ticket a eliminar:");
             areaPedido.setText("🗑️ Ticket #" + ticketId + " eliminado correctamente.");
         });
+        
+         // [MODIFICACIÓN] - ActionListener para el botón "Gestionar Empleados" (ahora interno al panel Admin)
+        btnGestionarEmpleadosInterno.addActionListener(e -> { // <-- ESTO ES LO QUE FALTABA
+            EmpleadosFrame empleadosFrame = new EmpleadosFrame();
+            empleadosFrame.setVisible(true);
+        });
+        
 
         panel.add(btnResumenVentas);
         panel.add(btnInformeInventario);
         panel.add(btnModificarInventario);
         panel.add(btnEliminarTicket);
+        
+        // [MODIFICACIÓN CLAVE] - Añadir el botón de Gestionar Empleados SOLO SI esAdmin es true.
+        if (esAdmin) { // <-- ESTO ES LO QUE FALTABA
+            panel.add(btnGestionarEmpleadosInterno); // <-- ESTO ES LO QUE FALTABA
+        }
 
         return panel;
     }
@@ -199,9 +248,6 @@ public class MenuPOS extends javax.swing.JFrame {
         controladorPOS.limpiarPedido();
     }
 
-    private void modificarInventario() {
-        new ModificarInventarioDialog(this, true);
-    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -231,7 +277,7 @@ public class MenuPOS extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+   public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
