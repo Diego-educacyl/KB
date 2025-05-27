@@ -14,6 +14,32 @@ import java.util.*;
  * @author martine.llaviv
  */
 public class ProductoDAO {
+        public static List<Producto> obtenerPorCategoria(String categoria) {
+        List<Producto> productos = new ArrayList<>();
+        String sql = "SELECT * FROM productos WHERE categoria = ?";
+
+        try (Connection conn = Database.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, categoria);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Producto p = new Producto(
+                    rs.getString("codigo"),
+                    rs.getString("nombre"),
+                    rs.getDouble("precio"),
+                    rs.getString("categoria")
+                );
+                productos.add(p);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return productos;
+    }
     public static List<Producto> obtenerTodos() {
         List<Producto> productos = new ArrayList<>();
         String sql = "SELECT * FROM productos";
