@@ -43,12 +43,11 @@ public class DetallePedido {
                 producto.getNombre(), cantidad, precioUnitario, getSubtotal());
     }
 
-    // Getters y setters
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 
-    public int getIdPedido() { return pedidoId; }
-    public void setIdPedido(int idPedido) { this.pedidoId = idPedido; }
+    public int getPedidoId() { return pedidoId; }
+    public void setPedidoId(int pedidoId) { this.pedidoId = pedidoId; }
 
     public Producto getProducto() { return producto; }
     public void setProducto(Producto producto) {

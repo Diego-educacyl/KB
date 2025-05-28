@@ -4,31 +4,28 @@
  */
 package Empresa.vistas;
 
-
-import Empresa.modelos.Producto;
+import Empresa.modelos.Insumo;
 import Empresa.controladores.ControladorInventario;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.List;
-/**
- *
- * @author diego.cruang
- */
+
 public class ModificarInventarioDialog extends javax.swing.JDialog {
 
-     private JTable tabla;
+    private JTable tabla;
     private DefaultTableModel modeloTabla;
-    private List<Producto> inventarioOriginal;
+    private List<Insumo> inventarioOriginal;
 
-    public ModificarInventarioDialog(JFrame parent, boolean par) {
-        super(parent, "Modificar Inventario", true);
+    public ModificarInventarioDialog(java.awt.Frame parent, boolean modal) {
+        super(parent, modal);
+        initComponents(); // Inicialización de componentes visuales
+        setTitle("Modificar Inventario");
         setSize(800, 400);
         setLocationRelativeTo(parent);
         setLayout(new BorderLayout());
 
-        // Columnas: Código, Nombre, Stock Actual, (+)Ingreso, (-)Merma, Resultado Final
         String[] columnas = {"Código", "Nombre", "Stock Actual", "Ingreso", "Merma", "Nuevo Stock"};
         modeloTabla = new DefaultTableModel(columnas, 0) {
             @Override
@@ -36,12 +33,13 @@ public class ModificarInventarioDialog extends javax.swing.JDialog {
                 return column == 3 || column == 4; // Solo ingreso y merma editables
             }
         };
+
         tabla = new JTable(modeloTabla);
         JScrollPane scroll = new JScrollPane(tabla);
 
         cargarInventario();
 
-        // Botones
+        // Panel de botones
         JPanel panelBotones = new JPanel();
         JButton btnDescartar = new JButton("Descartar");
         JButton btnModificar = new JButton("Modificar");
@@ -59,20 +57,18 @@ public class ModificarInventarioDialog extends javax.swing.JDialog {
 
         add(scroll, BorderLayout.CENTER);
         add(panelBotones, BorderLayout.SOUTH);
-
-        setVisible(true);
     }
 
     private void cargarInventario() {
-        inventarioOriginal = ControladorInventario.obtenerInventario(); // Este método debe acceder a la BD
-        for (Producto p : inventarioOriginal) {
+        inventarioOriginal = ControladorInventario.obtenerInsumos();
+        for (Insumo insumo : inventarioOriginal) {
             modeloTabla.addRow(new Object[]{
-                    p.getCodigo(),
-                    p.getNombre(),
-                    p.getCantidad(),
-                    0,
-                    0,
-                    p.getCantidad()
+                insumo.getCodigo(),
+                insumo.getNombre(),
+                insumo.getStock(),
+                0,
+                0,
+                insumo.getStock()
             });
         }
 
@@ -97,11 +93,9 @@ public class ModificarInventarioDialog extends javax.swing.JDialog {
         for (int i = 0; i < modeloTabla.getRowCount(); i++) {
             String codigo = modeloTabla.getValueAt(i, 0).toString();
             int nuevoStock = (int) modeloTabla.getValueAt(i, 5);
-
-            ControladorInventario.actualizarStockProducto(codigo, nuevoStock);
+            ControladorInventario.actualizarStockInsumo(codigo, nuevoStock);
         }
     }
-
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -144,32 +138,15 @@ public class ModificarInventarioDialog extends javax.swing.JDialog {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ModificarInventarioDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ModificarInventarioDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ModificarInventarioDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(ModificarInventarioDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
 
-        /* Create and display the dialog */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                ModificarInventarioDialog dialog = new ModificarInventarioDialog(new javax.swing.JFrame(), true);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    @Override
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            ModificarInventarioDialog dialog = new ModificarInventarioDialog(new javax.swing.JFrame(), true);
+            dialog.setVisible(true);
         });
-    }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
+}
 }

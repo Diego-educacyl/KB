@@ -24,9 +24,7 @@ public class EmpleadosFrame extends javax.swing.JFrame {
     
     private JTable tablaEmpleados;
     private DefaultTableModel modeloTabla;
-    /**
-     * Creates new form EmpleadosFrame
-     */
+
     public EmpleadosFrame() {
     setTitle("Gestión de Empleados");
         setSize(700, 400);

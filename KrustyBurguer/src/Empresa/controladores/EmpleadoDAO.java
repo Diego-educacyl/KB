@@ -24,9 +24,9 @@ public class EmpleadoDAO {
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                return rs.getString("puesto"); // "administrador" o "camarero"
+                return rs.getString("puesto"); 
             } else {
-                return null; // clave incorrecta
+                return null; 
             }
 
         } catch (SQLException e) {
@@ -36,7 +36,7 @@ public class EmpleadoDAO {
     }
   public static List<Empleado> obtenerTodos() {
         List<Empleado> empleados = new ArrayList<>();
-        String sql = "SELECT * FROM empleados";
+        String sql = "SELECT id, nombre, telefono, direccion, puesto, clave FROM empleados"; 
 
         try (Connection conn = Database.getConnection();
              Statement stmt = conn.createStatement();
@@ -44,11 +44,12 @@ public class EmpleadoDAO {
 
             while (rs.next()) {
                 Empleado emp = new Empleado(
-                        rs.getInt("id"),
-                        rs.getString("nombre"),
-                        rs.getString("telefono"),
-                        rs.getString("direccion"),
-                        rs.getString("puesto")
+                    rs.getInt("id"),
+                    rs.getString("nombre"),
+                    rs.getString("telefono"),
+                    rs.getString("direccion"),
+                    rs.getString("puesto"),
+                    rs.getString("clave") 
                 );
                 empleados.add(emp);
             }
@@ -56,12 +57,11 @@ public class EmpleadoDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return empleados;
     }
 
     public static void insertar(Empleado emp) {
-        String sql = "INSERT INTO empleados (nombre, telefono, direccion, puesto) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO empleados (nombre, telefono, direccion, puesto, clave) VALUES (?, ?, ?, ?, ?)"; 
 
         try (Connection conn = Database.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -70,6 +70,7 @@ public class EmpleadoDAO {
             stmt.setString(2, emp.getTelefono());
             stmt.setString(3, emp.getDireccion());
             stmt.setString(4, emp.getPuesto());
+            stmt.setString(5, emp.getClave()); 
 
             stmt.executeUpdate();
         } catch (SQLException e) {
@@ -78,7 +79,7 @@ public class EmpleadoDAO {
     }
 
     public static void actualizar(Empleado emp) {
-        String sql = "UPDATE empleados SET nombre = ?, telefono = ?, direccion = ?, puesto = ? WHERE id = ?";
+        String sql = "UPDATE empleados SET nombre = ?, telefono = ?, direccion = ?, puesto = ?, clave = ? WHERE id = ?";
 
         try (Connection conn = Database.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -87,7 +88,8 @@ public class EmpleadoDAO {
             stmt.setString(2, emp.getTelefono());
             stmt.setString(3, emp.getDireccion());
             stmt.setString(4, emp.getPuesto());
-            stmt.setInt(5, emp.getId());
+            stmt.setString(5, emp.getClave()); 
+            stmt.setInt(6, emp.getId());
 
             stmt.executeUpdate();
         } catch (SQLException e) {

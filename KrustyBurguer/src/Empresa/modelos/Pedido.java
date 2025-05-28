@@ -4,6 +4,8 @@
  */
 package Empresa.modelos;
 
+import java.time.LocalDate;
+
 
 /**
  *
@@ -19,7 +21,6 @@ public class Pedido {
     public Pedido() {
     }
 
-    
     public Pedido(int id, int clienteId, String fecha, String estado, double total) {
         this.id = id;
         this.clienteId = clienteId;
