@@ -14,7 +14,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ControladorInventario {
+public class InsumoDAO {
 
     // Método para obtener todos los insumos desde la base de datos
     public static List<Insumo> obtenerInsumos() {
@@ -41,18 +41,32 @@ public class ControladorInventario {
 
         return insumos;
     }
-
-    public static void actualizarStockInsumo(String codigo, int nuevoStock) {
-        String sql = "UPDATE insumos SET stock = ? WHERE codigo = ?";
+    // Método para actualizar un insumo existente (todos los campos excepto ID)
+    public static void actualizar(Insumo insumo) {
+        // Asegúrate de que los nombres de las columnas coincidan con tu tabla 'insumos'
+        // Es importante que la tabla 'insumos' tenga las columnas 'codigo', 'nombre',
+        // 'precio', 'stock', y 'categoria' para que esto funcione.
+        String sql = "UPDATE insumos SET codigo = ?, nombre = ?, precio = ?, stock = ?, categoria = ? WHERE id = ?";
 
         try (Connection con = Database.getConnection();
              PreparedStatement stmt = con.prepareStatement(sql)) {
 
-            stmt.setInt(1, nuevoStock);
-            stmt.setString(2, codigo);
-            stmt.executeUpdate();
+            stmt.setString(1, insumo.getCodigo());
+            stmt.setString(2, insumo.getNombre());
+            stmt.setDouble(3, insumo.getPrecio());
+            stmt.setInt(4, insumo.getStock());
+            stmt.setString(5, insumo.getCategoria());
+            stmt.setInt(6, insumo.getId()); // El ID para la condición WHERE
+
+            int rowsAffected = stmt.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("Insumo con ID " + insumo.getId() + " actualizado con éxito.");
+            } else {
+                System.out.println("No se encontró el insumo con ID " + insumo.getId() + " para actualizar.");
+            }
 
         } catch (SQLException e) {
+            System.err.println("Error al actualizar insumo: " + e.getMessage());
             e.printStackTrace();
         }
     }

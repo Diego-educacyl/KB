@@ -4,7 +4,7 @@
  */
 package Empresa.vistas;
 
-import Empresa.controladores.ControladorPOS;
+import Empresa.controladores.MenuPosDAO;
 
 import Empresa.modelos.Producto;
 import Empresa.vistas.MenuPOS;
@@ -23,7 +23,7 @@ public class MenuPOS extends javax.swing.JFrame {
     private JTextArea areaPedido;
     private JLabel labelTotal;
     private boolean esAdmin;
-    private ControladorPOS controladorPOS;
+    private MenuPosDAO controladorPOS;
     private JButton btnGestionarClientes;
     private JButton btnAdmin; 
 
@@ -46,7 +46,7 @@ public class MenuPOS extends javax.swing.JFrame {
         labelTotal.setHorizontalAlignment(SwingConstants.RIGHT);
 
 
-        this.controladorPOS = new ControladorPOS(areaPedido, labelTotal);
+        this.controladorPOS = new MenuPosDAO(areaPedido, labelTotal);
 
       
         add(crearPanelIzquierdo(), BorderLayout.WEST);
@@ -201,25 +201,19 @@ public class MenuPOS extends javax.swing.JFrame {
         btnInformeInventario.addActionListener(e -> areaPedido.setText(
                 "📦 Informe de inventario:\n\n- Hamburguesa Clásica: 80 uds\n- Patatas: 120 uds\n- Coca-Cola: 60 uds"
         ));
-
+        
+        // --- INICIO DE LA MODIFICACIÓN: Acción para "Modificar Inventario" ---
+        // Se reemplazó el antiguo código que usaba JOptionPane para pedir datos.
+        // Ahora, al hacer clic, se abre el nuevo InsumosFrame.
         btnModificarInventario.addActionListener(e -> {
-            String producto = JOptionPane.showInputDialog(this, "Producto a modificar:");
-            if (producto != null && !producto.trim().isEmpty()) {
-                String cantidadStr = JOptionPane.showInputDialog(this, "Cantidad a agregar para " + producto + ":");
-                try {
-                    int cantidad = Integer.parseInt(cantidadStr);
-                    if (cantidad > 0) {
-                        areaPedido.setText("✅ Se agregó " + cantidad + " unidades a " + producto);
-
-                    } else {
-                        JOptionPane.showMessageDialog(this, "La cantidad debe ser un número positivo.", "Error de entrada", JOptionPane.ERROR_MESSAGE);
-                    }
-                } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(this, "Por favor, ingrese un número válido para la cantidad.", "Error de entrada", JOptionPane.ERROR_MESSAGE);
-                }
-            }
+            // Abre la nueva ventana InsumosFrame (Gestión de Insumos)
+            InsumosFrame insumosFrame = new InsumosFrame();
+            // El constructor de InsumosFrame ya se encarga de hacerlo visible,
+            // por lo que no es necesario llamar a insumosFrame.setVisible(true) aquí.
         });
+        // --- FIN DE LA MODIFICACIÓN ---
 
+       
         btnEliminarTicket.addActionListener(e -> {
             String ticketId = JOptionPane.showInputDialog(this, "Ingrese el número de ticket a eliminar:");
             if (ticketId != null && !ticketId.trim().isEmpty()) {

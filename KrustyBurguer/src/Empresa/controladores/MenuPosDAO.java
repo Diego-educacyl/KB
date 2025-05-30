@@ -14,13 +14,13 @@ import java.util.*;
  *
  * @author diego.cruang
  */
-public class ControladorPOS {
+public class MenuPosDAO {
 
     private List<DetallePedido> pedidoActual;
     private JTextArea areaPedido;
     private JLabel labelTotal;
 
-    public ControladorPOS(JTextArea areaPedido, JLabel labelTotal) {
+    public MenuPosDAO(JTextArea areaPedido, JLabel labelTotal) {
         this.areaPedido = areaPedido;
         this.labelTotal = labelTotal;
         this.pedidoActual = new ArrayList<>();
