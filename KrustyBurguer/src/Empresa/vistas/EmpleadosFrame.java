@@ -93,7 +93,7 @@ public class EmpleadosFrame extends javax.swing.JFrame {
         String direccion = JOptionPane.showInputDialog(this, "Dirección:", modeloTabla.getValueAt(fila, 3));
         String puesto = JOptionPane.showInputDialog(this, "Puesto:", modeloTabla.getValueAt(fila, 4));
 
-        Empleado emp = new Empleado(id, nombre, telefono, direccion, puesto);
+        Empleado emp = new Empleado(id, nombre, telefono, direccion, puesto, clave);
         EmpleadoDAO.actualizar(emp);
         cargarEmpleados();
     }
